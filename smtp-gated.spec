@@ -2,7 +2,7 @@ Summary:	Spam/malware transparent SMTP proxy blocker
 Summary(pl):	Transparentne proxy SMTP blokuj±ce spam/wirusy
 Name:		smtp-gated
 Version:	1.4.12
-Release:	0.rc3.1
+Release:	1.rc3
 License:	GPL v2
 Group:		Applications/Networking
 Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}-rc3.tar.gz
@@ -12,6 +12,11 @@ URL:		http://smtp-proxy.klolik.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 #Requires:	kernel(netfilter)
+PreReq:		clamav
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/userdel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -71,27 +76,46 @@ src/%{name} -t | sed 's/^\([^#]\)/; &/' > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-if [ -f /var/lock/subsys/%{name} ]; then
-	/etc/rc.d/init.d/%{name} reload 1>&2
+%pre
+if [ -n "`id -u smtpgw 2>/dev/null`" ]; then
+	if [ "`id -u smtpgw`" != "147" ]; then
+		echo "Error: user smtpgw doesn't have uid=147. Correct this before installing %{name}." 1>&2
+		exit 1
+	fi
 else
-	echo "Type \"/etc/rc.d/init.d/%{name} start\" to start smtp-gated server" 1>&2
+	/usr/sbin/useradd -u 147 -r -d %{_var}/spool/%{name} -s /bin/false -c "SMTP gateway" -g clamav smtpgw 1>&2
+fi
+
+%postun
+if [ "$1" = "0" ]; then
+	%userremove smtpgw
+fi
+
+%post
+/sbin/chkconfig --add %{name}
+if [ -f /var/lock/subsys/%{name} ]; then
+	/etc/rc.d/init.d/%{name} restart >&2
+else
+	echo "Type \"/etc/rc.d/init.d/%{name} start\" to start %{name} server"
 fi
 
 %preun
-if [ "$1" = "0" -a -f /var/lock/subsys/%{name} ]; then
-	/etc/rc.d/init.d/%{name} stop
+if [ "$1" = "0" ]; then
+	if [ -f /var/lock/subsys/%{name} ]; then
+		/etc/rc.d/init.d/%{name} stop >&2
+	fi
+	/sbin/chkconfig --del %{name}
 fi
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README doc/manual*.txt
 %attr(640,root,root) %config(noreplace) %verify(not md5,size,mtime) /etc/sysconfig/%{name}
-%attr(640,root,root) %config(noreplace) %verify(not md5,size,mtime) %{_sysconfdir}/%{name}.conf
+%attr(640,root,clamav) %config(noreplace) %verify(not md5,size,mtime) %{_sysconfdir}/%{name}.conf
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/smtp-gated
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %{_examplesdir}/%{name}/*
-%attr(750,smtpgw,smtpgw) /var/run/%{name}
-%attr(750,smtpgw,smtpgw) /var/spool/%{name}
+%attr(750,smtpgw,clamav) /var/run/%{name}
+%attr(750,smtpgw,clamav) /var/spool/%{name}
