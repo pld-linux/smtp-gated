@@ -2,7 +2,7 @@ Summary:	Smtp-gated - a spam/malware transparent SMTP blocker
 Summary(pl):	smtp-gated - transparentne SMTP blokuj±ce spam/wirusy
 Name:		smtp-gated
 Version:	1.4.11
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Networking
 Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}.tar.gz
@@ -55,7 +55,7 @@ install lib/{fixed.conf,mksd.default,local.conf,mksd.init} $RPM_BUILD_ROOT%{_exa
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/smtp-gated
 
-src/%{name} -t > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
+src/%{name} -t | sed 's/^\([^#]\)/; &/' > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 touch $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 %clean
