@@ -7,8 +7,7 @@ License:	GPL
 Group:		Applications/Networking
 Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}.tar.gz
 # Source0-md5:	ebac2d141ba2ba953fa43211c7905ebc
-#Source1:	%{name}.inetd
-#Prereq:		rc-inetd >= 0.8.1
+Source1:	%{name}.init
 URL:		http://smtp-proxy.klolik.org
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	clamsmtp
@@ -46,35 +45,40 @@ zainfekowane komputery ze swoich sieci.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/sysconfig/rc-inetd,%{_examplesdir}/%{name}}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d/,sysconfig},%{_examplesdir}/%{name}}
 
 install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
 install lib/manual.8  $RPM_BUILD_ROOT%{_mandir}/man8/%{name}.8
 install lib/manual.conf.5  $RPM_BUILD_ROOT%{_mandir}/man5/%{name}.5
 
-install lib/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}
+install lib/{fixed.conf,mksd.default,redhat.init,debian.init,local.conf,mksd.init} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
 
-#install %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/rc-inetd/smtpproxy
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/smtp-gated
+
+src/%{name} -t > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
+touch $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ -f /var/lock/subsys/rc-inetd ]; then
-	/etc/rc.d/init.d/rc-inetd reload 1>&2
+if [ -f /var/lock/subsys/%{name} ]; then
+	/etc/rc.d/init.d/%{smtp-gated} reload 1>&2
 else
-	echo "Type \"/etc/rc.d/init.d/rc-inetd start\" to start inet server" 1>&2
+	echo "Type \"/etc/rc.d/init.d/%{name} start\" to start smtp-gated server" 1>&2
 fi
 
-%postun
-if [ "$1" = "0" -a -f /var/lock/subsys/rc-inetd ]; then
-	/etc/rc.d/init.d/rc-inetd reload
+%preun
+if [ "$1" = "0" -a -f /var/lock/subsys/%{name} ]; then
+	/etc/rc.d/init.d/%{name} stop
 fi
 
 %files
 %defattr(644,root,root,755)
-%doc README
-#%attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/%{name}
+%doc README Changelog
+%attr(640,root,root) %config %verify(not md5 mtime size) /etc/sysconfig/%{name}
+%attr(640,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
+/etc/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/smtp-gated
 %{_mandir}/man5/*
 %{_mandir}/man8/*
