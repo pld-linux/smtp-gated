@@ -51,15 +51,18 @@ case "$1" in
 	;;
   reload)
 	if [ -f /var/lock/subsys/$prog ]; then
-		echo -n $"Syntax checking: "
+		msg_reloading "$prog"
 		$prog -t "$CONFIG" >/dev/null
-		if [ "$?" == "0" ]; then
-			msg_reloading "$prog"
+		if [ "$?" = "0" ]; then
+			busy
 			$prog -r "$CONFIG"
+			ok
 			RETVAL=$?
+		else
+			fail
 		fi
 	else
-		msg_not_running "$prog" >&1
+		msg_not_running "$prog"
 		exit 7
 	fi
 	;;
