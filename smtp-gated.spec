@@ -1,5 +1,5 @@
-Summary:	Smtp-gated is a spam/malware transparent SMTP blocker
-Summary(pl):	smtp-gated blokuje spam/wirusya u¿ywaj±c transparentego SMTP
+Summary:	Smtp-gated - a spam/malware transparent SMTP blocker
+Summary(pl):	smtp-gated - transparentne SMTP blokuj±ce spam/wirusy
 Name:		smtp-gated
 Version:	1.4.11
 Release:	0.1
@@ -8,13 +8,12 @@ Group:		Applications/Networking
 Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}.tar.gz
 # Source0-md5:	ebac2d141ba2ba953fa43211c7905ebc
 Source1:	%{name}.init
-URL:		http://smtp-proxy.klolik.org
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+URL:		http://smtp-proxy.klolik.org/
+#Requires:	kernel(netfilter)
 Conflicts:	clamsmtp
-Requires:	kernel(netfilter)
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-
 This software block SMTP sessions used by e-mail worms and viruses on
 the NA(P)T router. It depends on netfilter framework of Linux.
 
@@ -25,7 +24,7 @@ eliminate infected hosts from their network, and (preferably) educate
 their users.
 
 %description -l pl
-To oprogramowanie blokuje sesje smtp u¿ywane przez robaki i wirusy na
+To oprogramowanie blokuje sesje SMTP u¿ywane przez robaki i wirusy na
 poziomie routerów z NA(P)T. Jest zale¿ne od warstwy netfiltra
 linuksowego kernela.
 
@@ -44,7 +43,7 @@ zainfekowane komputery ze swoich sieci.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d/,sysconfig}}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d,sysconfig}}
 install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/smtp-gated/msg}
 install -d $RPM_BUILD_ROOT/var/run/smtp-gated
 
@@ -52,7 +51,7 @@ install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
 install lib/manual.8  $RPM_BUILD_ROOT%{_mandir}/man8/%{name}.8
 install lib/manual.conf.5  $RPM_BUILD_ROOT%{_mandir}/man5/%{name}.conf.5
 
-install lib/{fixed.conf,mksd.default,redhat.init,debian.init,local.conf,mksd.init} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
+install lib/{fixed.conf,mksd.default,local.conf,mksd.init} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/smtp-gated
 
@@ -77,8 +76,8 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README Changelog
-%attr(640,root,root) %config %verify(not md5 mtime size) /etc/sysconfig/%{name}
-%attr(640,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/smtp-gated
 %{_mandir}/man5/*
