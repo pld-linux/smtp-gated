@@ -78,7 +78,7 @@ fi
 %doc README Changelog
 %attr(640,root,root) %config %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %attr(640,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
-%attr(755,root,root) /etc/rc.d/init.d/%{name}
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/smtp-gated
 %{_mandir}/man5/*
 %{_mandir}/man8/*
