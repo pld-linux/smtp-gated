@@ -24,7 +24,6 @@ session is terminated. It's to be used (mostly) by ISPs, so they can
 eliminate infected hosts from their network, and (preferably) educate
 their users.
 
-
 %description -l pl
 To oprogramowanie blokuje sesje smtp u¿ywane przez robaki i wirusy na
 poziomie routerów z NA(P)T. Jest zale¿ne od warstwy netfiltra
@@ -45,7 +44,8 @@ zainfekowane komputery ze swoich sieci.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d/,sysconfig},%{_examplesdir}/%{name}}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d/,sysconfig}}
+install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/smtp-gated/}
 
 install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
 install lib/manual.8  $RPM_BUILD_ROOT%{_mandir}/man8/%{name}.8
@@ -83,3 +83,4 @@ fi
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %{_examplesdir}/%{name}/*
+%dir /var/spool/smtp-gated/
