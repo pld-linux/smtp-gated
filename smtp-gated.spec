@@ -29,7 +29,7 @@ poziomie routerów z NA(P)T. Jest zale¿ne od warstwy netfiltra
 linuksowego kernela.
 
 Dzia³a jak proxy, przechwytuj±c wychodz±cy ruch SMTP i skanuj±c dane
-w-locie. Gdy wiadomo¶æ jest zainfekowana, sesja zostaje przerwana.
+w locie. Gdy wiadomo¶æ jest zainfekowana, sesja zostaje przerwana.
 Oprogramowanie jest przeznaczone dla ISP, mog± nim wyeliminowaæ
 zainfekowane komputery ze swoich sieci.
 
