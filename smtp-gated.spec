@@ -45,11 +45,12 @@ zainfekowane komputery ze swoich sieci.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d/,sysconfig}}
-install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/smtp-gated/}
+install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/smtp-gated/msg}
+install -d $RPM_BUILD_ROOT/var/run/smtp-gated
 
 install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
 install lib/manual.8  $RPM_BUILD_ROOT%{_mandir}/man8/%{name}.8
-install lib/manual.conf.5  $RPM_BUILD_ROOT%{_mandir}/man5/%{name}.5
+install lib/manual.conf.5  $RPM_BUILD_ROOT%{_mandir}/man5/%{name}.conf.5
 
 install lib/{fixed.conf,mksd.default,redhat.init,debian.init,local.conf,mksd.init} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
 
@@ -83,4 +84,6 @@ fi
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %{_examplesdir}/%{name}/*
-%dir /var/spool/smtp-gated/
+%dir /var/spool/smtp-gated
+%dir /var/spool/smtp-gated/msg
+%dir /var/run/smtp-gated
