@@ -44,7 +44,7 @@ zainfekowane komputery ze swoich sieci.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d,sysconfig}}
-install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/smtp-gated/msg}
+install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/smtp-gated/{lock,msg}}
 install -d $RPM_BUILD_ROOT/var/run/smtp-gated
 
 install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
@@ -63,7 +63,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 if [ -f /var/lock/subsys/%{name} ]; then
-	/etc/rc.d/init.d/%{smtp-gated} reload 1>&2
+	/etc/rc.d/init.d/%{name} reload 1>&2
 else
 	echo "Type \"/etc/rc.d/init.d/%{name} start\" to start smtp-gated server" 1>&2
 fi
@@ -84,5 +84,6 @@ fi
 %{_mandir}/man8/*
 %{_examplesdir}/%{name}/*
 %dir /var/spool/smtp-gated
+%dir /var/spool/smtp-gated/lock
 %dir /var/spool/smtp-gated/msg
 %dir /var/run/smtp-gated
