@@ -3,7 +3,7 @@ Summary(pl):	smtp-gated blokuje spam/wirusya u¿ywaj±c transparentego SMTP
 Name:		smtp-gated
 Version:	1.4.11
 Release:	0.1
-License:	GPL
+License:	GPL v2
 Group:		Applications/Networking
 Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}.tar.gz
 # Source0-md5:	ebac2d141ba2ba953fa43211c7905ebc
