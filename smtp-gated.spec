@@ -8,6 +8,7 @@ Group:		Applications/Networking
 Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}-rc3.tar.gz
 # Source0-md5:	4cb43aa02307a0c97b46ebd8e63cba8f
 Source1:	%{name}.init
+Source2:	%{name}.conf
 URL:		http://smtp-proxy.klolik.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -69,8 +70,7 @@ install doc/smtp-gated.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5
 install lib/{fixed.conf,local.conf} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/smtp-gated
-
-src/%{name} -t | sed 's/^\([^#]\)/; &/' > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 :> $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 %clean
