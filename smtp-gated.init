@@ -1,99 +1,74 @@
 #! /bin/sh
 #
-# smtp-gated   Start/Stop the SMTP antivirus daemon.
+# smtp-gated	Start/Stop the SMTP antivirus daemon.
 #
-# chkconfig: 2345 90 60
-# description: smtp-gated is a UNIX program that scans SMTP mail for Viruses. \
-#    Can be installed on linux NA(P)T router, and scan mail transparently \
-#    using ClamAV daemon & netfilter framework. Can also scan traffic to \
-#    one fixed MTA.
-# processname: smtp-gated
-# config: /etc/smtp-gated.conf
-# pidfile: /var/run/smtp-gated/smtp-gated.pid
+# chkconfig:	2345 90 60
+# description:	smtp-gated is a UNIX program that scans SMTP mail for spam and viruses.\
+#		Can be installed on Linux NA(P)T router and scan mail transparently \
+#		using ClamAV daemon & netfilter framework and SpamAssassin. Can also scan \
+#		traffic to one fixed MTA.
+# processname:	smtp-gated
+# config:	/etc/smtp-gated.conf
+# pidfile:	/var/run/smtp-gated/smtp-gated.pid
+
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-RETVAL=0
-
-# See how we were called.
-
 prog="smtp-gated"
-DAEMON="/usr/sbin/$prog"
 CONFIG="/etc/smtp-gated.conf"
 
 # Source configuration
-if [ -f /etc/sysconfig/$prog ] ; then
-    . /etc/sysconfig/$prog
-fi
+[ -f /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
-start() {
-        echo -n $"Starting $prog: "
-        daemon $DAEMON "$CONFIG"
-        RETVAL=$?
-        echo
-        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
-        return $RETVAL
-}
-
-stop() {
-        echo -n $"Stopping $prog: "
-#        killproc $prog
-	pidfile=`$DAEMON -t "$CONFIG" |awk '(/^pidfile/) {print $2}'`
-	kill -TERM `cat "$pidfile"`
-        RETVAL=$?
-        echo
-        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$prog
-        return $RETVAL
-}
-
-rhstatus() {
-        status $prog
-}
-
-restart() {
-        stop
-        start
-}
-
-reload() {
-	echo -n $"Syntax checking: "
-	$DAEMON -t "$CONFIG" >/dev/null
-	if [ "$?" == "0" ]; then
-	        echo -n $"Reloading $prog daemon configuration: "
-#	        killproc $prog -HUP
-		$DAEMON -r "$CONFIG"
-	        retval=$?
-	        echo
-	        return $RETVAL
-	else
-		return 1
-	fi
-}
-
+RETVAL=0
+# See how we were called.
 case "$1" in
   start)
-        start
-        ;;
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/$prog ]; then
+		msg_starting "$prog"
+		daemon $prog "$CONFIG"
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
+	else
+		msg_already_running "$prog"
+	fi
+	;;
   stop)
-        stop
-        ;;
+	if [ -f /var/lock/subsys/$prog ]; then
+		msg_stopping "$prog"
+		pidfile=`$prog -t "$CONFIG" | awk '(/^pidfile/) {print $2}'`
+		killproc --pidfile $pidfile $prog
+		rm -f /var/lock/subsys/$prog
+	else
+		msg_not_running "$prog"
+	fi
+	;;
   restart)
-        restart
-        ;;
+	$0 stop
+	$0 start
+	;;
   reload)
-        reload
-        ;;
+	if [ -f /var/lock/subsys/$prog ]; then
+		echo -n $"Syntax checking: "
+		$prog -t "$CONFIG" >/dev/null
+		if [ "$?" == "0" ]; then
+			msg_reloading "$prog"
+			$prog -r "$CONFIG"
+			RETVAL=$?
+		fi
+	else
+		msg_not_running "$prog" >&1
+		exit 7
+	fi
+	;;
   status)
-        rhstatus
-	$DAEMON -s "$CONFIG"
-        ;;
-  condrestart)
-        [ -f /var/lock/subsys/$prog ] && restart || :
-        ;;
+	$prog -s "$CONFIG"
+	;;
   *)
-        echo $"Usage: $0 {start|stop|status|reload|restart|condrestart}"
-        exit 1
+	msg_usage "$0 {start|stop|status|reload|restart}"
+	exit 3
 esac
 
-exit $?
+exit $RETVAL
