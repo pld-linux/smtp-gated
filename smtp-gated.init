@@ -1,0 +1,99 @@
+#! /bin/sh
+#
+# smtp-gated   Start/Stop the SMTP antivirus daemon.
+#
+# chkconfig: 2345 90 60
+# description: smtp-gated is a UNIX program that scans SMTP mail for Viruses. \
+#    Can be installed on linux NA(P)T router, and scan mail transparently \
+#    using ClamAV daemon & netfilter framework. Can also scan traffic to \
+#    one fixed MTA.
+# processname: smtp-gated
+# config: /etc/smtp-gated.conf
+# pidfile: /var/run/smtp-gated/smtp-gated.pid
+
+# Source function library.
+. /etc/init.d/functions
+
+RETVAL=0
+
+# See how we were called.
+
+prog="smtp-gated"
+DAEMON="/usr/sbin/$prog"
+CONFIG="/etc/smtp-gated.conf"
+
+# Source configuration
+if [ -f /etc/sysconfig/$prog ] ; then
+    . /etc/sysconfig/$prog
+fi
+
+start() {
+        echo -n $"Starting $prog: "
+        daemon $DAEMON "$CONFIG"
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
+        return $RETVAL
+}
+
+stop() {
+        echo -n $"Stopping $prog: "
+#        killproc $prog
+	pidfile=`$DAEMON -t "$CONFIG" |awk '(/^pidfile/) {print $2}'`
+	kill -TERM `cat "$pidfile"`
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$prog
+        return $RETVAL
+}
+
+rhstatus() {
+        status $prog
+}
+
+restart() {
+        stop
+        start
+}
+
+reload() {
+	echo -n $"Syntax checking: "
+	$DAEMON -t "$CONFIG" >/dev/null
+	if [ "$?" == "0" ]; then
+	        echo -n $"Reloading $prog daemon configuration: "
+#	        killproc $prog -HUP
+		$DAEMON -r "$CONFIG"
+	        retval=$?
+	        echo
+	        return $RETVAL
+	else
+		return 1
+	fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        restart
+        ;;
+  reload)
+        reload
+        ;;
+  status)
+        rhstatus
+	$DAEMON -s "$CONFIG"
+        ;;
+  condrestart)
+        [ -f /var/lock/subsys/$prog ] && restart || :
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|reload|restart|condrestart}"
+        exit 1
+esac
+
+exit $?
