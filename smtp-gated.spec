@@ -39,7 +39,7 @@ zainfekowane komputery ze swoich sieci.
 %build
 %{__make} \
 	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags}"
+	OPTS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -48,8 +48,8 @@ install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/smtp-gated/msg}
 install -d $RPM_BUILD_ROOT/var/run/smtp-gated
 
 install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
-install lib/manual.8  $RPM_BUILD_ROOT%{_mandir}/man8/%{name}.8
-install lib/manual.conf.5  $RPM_BUILD_ROOT%{_mandir}/man5/%{name}.conf.5
+install lib/manual.8 $RPM_BUILD_ROOT%{_mandir}/man8/%{name}.8
+install lib/manual.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5/%{name}.conf.5
 
 install lib/{fixed.conf,mksd.default,local.conf,mksd.init} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
 
