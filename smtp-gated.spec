@@ -18,6 +18,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/sbin/useradd
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
+Provides:	user(smtpgw)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -77,14 +78,7 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ -n "`id -u smtpgw 2>/dev/null`" ]; then
-	if [ "`id -u smtpgw`" != "147" ]; then
-		echo "Error: user smtpgw doesn't have uid=147. Correct this before installing %{name}." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/useradd -u 147 -r -d %{_var}/spool/%{name} -s /bin/false -c "SMTP gateway" -g clamav smtpgw 1>&2
-fi
+%useradd -u 147 -r -d %{_var}/spool/%{name} -s /bin/false -c "SMTP gateway" -g clamav smtpgw
 
 %postun
 if [ "$1" = "0" ]; then
