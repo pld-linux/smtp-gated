@@ -6,7 +6,7 @@ Release:	1.rc7
 License:	GPL v2
 Group:		Applications/Networking
 Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}-rc7.tar.gz
-# Source0-md5:	054636ce8855dea878728691c034356d
+# Source0-md5:	71f57ef323f51750055a9f377252dceb
 Source1:	%{name}.init
 Source2:	%{name}.conf
 URL:		http://smtp-proxy.klolik.org/
