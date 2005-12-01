@@ -2,11 +2,11 @@ Summary:	Spam/malware transparent SMTP proxy blocker
 Summary(pl):	Transparentne proxy SMTP blokuj±ce spam/wirusy
 Name:		smtp-gated
 Version:	1.4.12
-Release:	1.rc7
+Release:	1.rc8
 License:	GPL v2
 Group:		Applications/Networking
-Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}-rc7.tar.gz
-# Source0-md5:	71f57ef323f51750055a9f377252dceb
+Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}-rc8.tar.gz
+# Source0-md5:	26897be723ae181a1d7f31af7e4d58f1
 Source1:	%{name}.init
 Source2:	%{name}.conf
 URL:		http://smtp-proxy.klolik.org/
@@ -46,7 +46,7 @@ zainfekowane komputery ze swoich sieci.
 Pe³ni podobn± funkcjê co clamsmtp i assp.
 
 %prep
-%setup -q -n %{name}-%{version}-rc7
+%setup -q -n %{name}-%{version}-rc8
 
 %build
 %{__aclocal}
