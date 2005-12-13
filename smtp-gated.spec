@@ -12,12 +12,12 @@ Source2:	%{name}.conf
 URL:		http://smtp-proxy.klolik.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
-#Requires:	kernel(netfilter)
-PreReq:		clamav
-Requires(pre):	/bin/id
-Requires(pre):	/usr/sbin/useradd
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
+Requires:	clamav
+#Requires:	kernel(netfilter)
 Provides:	user(smtpgw)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -38,8 +38,8 @@ To oprogramowanie blokuje sesje SMTP u¿ywane przez robaki i wirusy na
 poziomie routerów z NA(P)T. Jest zale¿ne od warstwy netfiltra
 linuksowego kernela.
 
-Dzia³a jak proxy, przechwytuj±c wychodz±cy ruch SMTP i skanuj±c dane
-w locie. Gdy wiadomo¶æ jest zainfekowana, sesja zostaje przerwana.
+Dzia³a jak proxy, przechwytuj±c wychodz±cy ruch SMTP i skanuj±c dane w
+locie. Gdy wiadomo¶æ jest zainfekowana, sesja zostaje przerwana.
 Oprogramowanie jest przeznaczone dla ISP, mog± nim wyeliminowaæ
 zainfekowane komputery ze swoich sieci.
 
@@ -104,8 +104,8 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README doc/manual*.txt
-%attr(640,root,root) %config(noreplace) %verify(not md5,size,mtime) /etc/sysconfig/%{name}
-%attr(640,root,clamav) %config(noreplace) %verify(not md5,size,mtime) %{_sysconfdir}/%{name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
+%attr(640,root,clamav) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(755,root,root) %{_sbindir}/smtp-gated
 %{_mandir}/man5/*
