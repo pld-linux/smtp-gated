@@ -1,13 +1,12 @@
-%define		_rc	rc1
 Summary:	Spam/malware transparent SMTP proxy blocker
 Summary(pl):	Transparentne proxy SMTP blokuj±ce spam/wirusy
 Name:		smtp-gated
-Version:	1.4.14
-Release:	1.%{_rc}.1
+Version:	1.4.15.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Networking
-Source0:	http://smtp-proxy.klolik.org/%{name}-%{version}-%{_rc}.tar.gz
-# Source0-md5:	accd612edce0907d9884407a7802cb1a
+Source0:	http://smtp-proxy.klolik.org/files/%{name}-%{version}.tar.gz
+# Source0-md5:	230e34409b194cc1260a8bf42f3e3d94
 Source1:	%{name}.init
 Source2:	%{name}.conf
 URL:		http://smtp-proxy.klolik.org/
@@ -47,7 +46,7 @@ zainfekowane komputery ze swoich sieci.
 Pe³ni podobn± funkcjê co clamsmtp i assp.
 
 %prep
-%setup -q -n %{name}-%{version}-%{_rc}
+%setup -q
 
 %build
 %{__aclocal}
@@ -69,7 +68,7 @@ install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
 install doc/smtp-gated.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install doc/smtp-gated.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5
 
-install lib/{fixed.conf,nat.conf} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
+install contrib/{fixed.conf,nat.conf} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/smtp-gated
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
@@ -104,7 +103,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog README doc/manual*.txt
+%doc AUTHORS ChangeLog README
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/%{name}
 %attr(640,root,clamav) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}.conf
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
