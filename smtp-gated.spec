@@ -1,5 +1,5 @@
 Summary:	Spam/malware transparent SMTP proxy blocker
-Summary(pl.UTF-8):   Transparentne proxy SMTP blokujące spam/wirusy
+Summary(pl.UTF-8):	Transparentne proxy SMTP blokujące spam/wirusy
 Name:		smtp-gated
 Version:	1.4.15.1
 Release:	1
