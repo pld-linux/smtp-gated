@@ -1,5 +1,5 @@
 Summary:	Spam/malware transparent SMTP proxy blocker
-Summary(pl):	Transparentne proxy SMTP blokuj±ce spam/wirusy
+Summary(pl.UTF-8):   Transparentne proxy SMTP blokujÄ…ce spam/wirusy
 Name:		smtp-gated
 Version:	1.4.15.1
 Release:	1
@@ -33,17 +33,17 @@ their users.
 
 It's similar to clamsmtp and assp.
 
-%description -l pl
-To oprogramowanie blokuje sesje SMTP u¿ywane przez robaki i wirusy na
-poziomie routerów z NA(P)T. Jest zale¿ne od warstwy netfiltra
+%description -l pl.UTF-8
+To oprogramowanie blokuje sesje SMTP uÅ¼ywane przez robaki i wirusy na
+poziomie routerÃ³w z NA(P)T. Jest zaleÅ¼ne od warstwy netfiltra
 linuksowego kernela.
 
-Dzia³a jak proxy, przechwytuj±c wychodz±cy ruch SMTP i skanuj±c dane w
-locie. Gdy wiadomo¶æ jest zainfekowana, sesja zostaje przerwana.
-Oprogramowanie jest przeznaczone dla ISP, mog± nim wyeliminowaæ
+DziaÅ‚a jak proxy, przechwytujÄ…c wychodzÄ…cy ruch SMTP i skanujÄ…c dane w
+locie. Gdy wiadomoÅ›Ä‡ jest zainfekowana, sesja zostaje przerwana.
+Oprogramowanie jest przeznaczone dla ISP, mogÄ… nim wyeliminowaÄ‡
 zainfekowane komputery ze swoich sieci.
 
-Pe³ni podobn± funkcjê co clamsmtp i assp.
+PeÅ‚ni podobnÄ… funkcjÄ™ co clamsmtp i assp.
 
 %prep
 %setup -q
