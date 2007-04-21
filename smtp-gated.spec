@@ -110,6 +110,6 @@ fi
 %attr(755,root,root) %{_sbindir}/smtp-gated
 %{_mandir}/man5/*
 %{_mandir}/man8/*
-%{_examplesdir}/%{name}/*
+%{_examplesdir}/%{name}
 %attr(750,smtpgw,clamav) /var/run/%{name}
 %attr(750,smtpgw,clamav) /var/spool/%{name}
