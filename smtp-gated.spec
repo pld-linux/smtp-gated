@@ -61,14 +61,14 @@ Pełni podobną funkcję co clamsmtp i assp.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d,sysconfig}}
-install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name},/var/spool/%{name}/{lock,msg}}
+install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name}-%{version},/var/spool/%{name}/{lock,msg}}
 install -d $RPM_BUILD_ROOT/var/run/%{name}
 
 install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
 install doc/smtp-gated.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install doc/smtp-gated.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5
 
-install contrib/{fixed.conf,nat.conf} $RPM_BUILD_ROOT%{_examplesdir}/%{name}
+install contrib/{fixed.conf,nat.conf} $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/smtp-gated
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
@@ -110,6 +110,6 @@ fi
 %attr(755,root,root) %{_sbindir}/smtp-gated
 %{_mandir}/man5/*
 %{_mandir}/man8/*
-%{_examplesdir}/%{name}
+%{_examplesdir}/%{name}-%{version}
 %attr(750,smtpgw,clamav) /var/run/%{name}
 %attr(750,smtpgw,clamav) /var/spool/%{name}
