@@ -1,3 +1,6 @@
+# TODO:
+# checking for linux/netfilter_ipv4.h... no
+# mode netfilter is broken
 Summary:	Spam/malware transparent SMTP proxy blocker
 Summary(pl.UTF-8):	Transparentne proxy SMTP blokujące spam/wirusy
 Name:		smtp-gated
