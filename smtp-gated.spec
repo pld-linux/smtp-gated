@@ -7,7 +7,7 @@ Name:		smtp-gated
 Version:	1.4.16
 Release:	2
 License:	GPL v2
-Group:		Applications/Networking
+Group:		Networking/Daemons/SMTP
 Source0:	http://smtp-proxy.klolik.org/files/%{name}-%{version}.tar.gz
 # Source0-md5:	fd8387f59edc8bf42783516198c27e76
 Source1:	%{name}.init
