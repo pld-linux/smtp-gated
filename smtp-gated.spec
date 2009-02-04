@@ -1,20 +1,18 @@
-# TODO:
-# checking for linux/netfilter_ipv4.h... no
-# mode netfilter is broken
 Summary:	Spam/malware transparent SMTP proxy blocker
 Summary(pl.UTF-8):	Transparentne proxy SMTP blokujące spam/wirusy
 Name:		smtp-gated
-Version:	1.4.16
-Release:	2
+Version:	1.4.16.2
+Release:	1
 License:	GPL v2
 Group:		Networking/Daemons/SMTP
 Source0:	http://smtp-proxy.klolik.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	fd8387f59edc8bf42783516198c27e76
+# Source0-md5:	3857d03c847efd89b052acaeffaa453b
 Source1:	%{name}.init
 Source2:	%{name}.conf
 URL:		http://smtp-proxy.klolik.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	libspf2-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
