@@ -9,6 +9,7 @@ Source0:	http://smtp-proxy.klolik.org/files/%{name}-%{version}.tar.gz
 # Source0-md5:	1026f1cc926d4448a1e47e805c78e085
 Source1:	%{name}.init
 Source2:	%{name}.conf
+Source3:	%{name}.tmpfiles
 URL:		http://smtp-proxy.klolik.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -63,9 +64,9 @@ Pełni podobną funkcję co clamsmtp i assp.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d,sysconfig}}
-install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name}-%{version},/var/spool/%{name}/{lock,msg}}
-install -d $RPM_BUILD_ROOT/var/run/%{name}
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man{5,8},/etc/{rc.d/init.d,sysconfig}} \
+	$RPM_BUILD_ROOT{%{_examplesdir}/%{name}-%{version},/var/spool/%{name}/{lock,msg}} \
+	$RPM_BUILD_ROOT{/var/run/%{name},/usr/lib/tmpfiles.d}
 
 install src/smtp-gated $RPM_BUILD_ROOT%{_sbindir}
 install doc/smtp-gated.8 $RPM_BUILD_ROOT%{_mandir}/man8
@@ -75,6 +76,8 @@ install contrib/{fixed.conf,nat{,-advanced}.conf} $RPM_BUILD_ROOT%{_examplesdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/smtp-gated
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
+install %{SOURCE3} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+
 :> $RPM_BUILD_ROOT/etc/sysconfig/%{name}
 
 %clean
@@ -114,5 +117,6 @@ fi
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %{_examplesdir}/%{name}-%{version}
+/usr/lib/tmpfiles.d/%{name}.conf
 %attr(750,smtpgw,clamav) /var/run/%{name}
 %attr(750,smtpgw,clamav) /var/spool/%{name}
